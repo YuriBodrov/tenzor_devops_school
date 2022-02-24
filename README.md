@@ -63,7 +63,7 @@ centos-02
 [ubuntu_nodes]       
 ubuntu-01
 ```
-> Ansible Manager's Hostnames-To-IpAddr resolving file: /etc/hosts
+> Ansible Manager's Hostname-To-IpAddr resolving file: /etc/hosts
 ```
 ##############################################################################
 10.2.201.55     master.domain.test      master
