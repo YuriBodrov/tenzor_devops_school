@@ -10,28 +10,28 @@ Please feel free to discover a Virtual Lab Infrastructure's scheme.
 # config file for ansible -- https://ansible.com/
 # ===============================================
 
-# nearly all parameters can be overridden in ansible-playbook  
+# nearly all parameters can be overridden in ansible-playbook
 # or with command line flags. ansible will read ANSIBLE_CONFIG,
 # ansible.cfg in the current working directory, .ansible.cfg in
-# the home directory or /etc/ansible/ansible.cfg, whichever it 
+# the home directory or /etc/ansible/ansible.cfg, whichever it
 # finds first
 
 [defaults]
 host_key_checking = False
-callbacks_enabled = timer, profile_tasks, profile_roles        
+callback_whitelist = timer, profile_tasks, profile_roles
 remote_user = ansible
 
 [inventory]
 ###########
 
 [privilege_escalation]
-become=True
+become = True
 
 [paramiko_connection]
 #####################
 
 [ssh_connection]
-ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s      
+ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s
 
 [persistent_connection]
 #######################
@@ -40,7 +40,7 @@ ssh_args = -C -o ControlMaster=auto -o ControlPersist=60s
 ############
 
 [selinux]
-#########
+######### 
 
 [colors]
 ########
