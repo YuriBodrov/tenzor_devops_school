@@ -66,13 +66,13 @@ ubuntu-01
 > Ansible Manager's Hostname-To-IpAddr resolving file: /etc/hosts
 ```
 ##############################################################################
-10.2.201.55     master.domain.test      master
-10.2.201.56     ansible.domain.test     ansible
-10.2.201.57     n-vcsa-01.domain.test   n-vcsa-01
-10.2.201.58     gitstore.domain.test    gitstore
+w.x.y.55     master.domain.test      master
+w.x.y.56     ansible.domain.test     ansible
+w.x.y.57     n-vcsa-01.domain.test   n-vcsa-01
+w.x.y.58     gitstore.domain.test    gitstore
 #
-10.2.201.78     centos-01.domain.test   centos-01
-10.2.201.79     centos-02.domain.test   centos-02
-10.2.201.80     ubuntu-01.domain.test   ubuntu-01
+w.x.y.78     centos-01.domain.test   centos-01
+w.x.y.79     centos-02.domain.test   centos-02
+w.x.y.80     ubuntu-01.domain.test   ubuntu-01
 ##############################################################################
 ```
