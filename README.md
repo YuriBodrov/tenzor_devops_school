@@ -1,6 +1,5 @@
 # tenzor_devops_school
-
-### Tenzor DevOps School. Homework Storage. :-) <br />
+### Tenzor DevOps School. Homework Storage.
 Please feel free to discover a Virtual Lab Infrastructure's scheme.
 > FileName : scheme.png <br />
 ![scheme](https://user-images.githubusercontent.com/33868527/155518559-e33facfa-097a-425f-84f8-eae612af975b.png)
