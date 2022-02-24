@@ -4,7 +4,7 @@ Please feel free to discover a Virtual Lab Infrastructure's scheme.
 > FileName : scheme.png <br />
 ![scheme](https://user-images.githubusercontent.com/33868527/155518559-e33facfa-097a-425f-84f8-eae612af975b.png)
 
-Also, there is a content of /etc/ansible/ansible.cfg, /etc/ansible/hosts, /etc/hosts down below:
+#### Also, there is a content of /etc/ansible/ansible.cfg, /etc/ansible/hosts and /etc/hosts down below:
 > Ansible Configuration File: /etc/ansible/ansible.cfg
 ```
 # config file for ansible -- https://ansible.com/
