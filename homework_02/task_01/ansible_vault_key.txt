@@ -1,1 +1,3 @@
 key : P@ssw0rd1
+---
+cmd : $ ansible-playbook -v --ask-vault-pass play_with_secrets.yaml
