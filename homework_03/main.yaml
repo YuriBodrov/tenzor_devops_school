@@ -1,0 +1,31 @@
+---
+# Play with roles. Main file!
+
+### IMPORTANT! When we use a tag "nginxUp", we start, actually, 2 roles:        ###
+### "cert_role" and "nginx_role" (Certificate generation + NGINX installation)! ###
+
+- name: PLAY WITH ANSIBLE ROLES
+  hosts: centos_nodes
+
+  tasks:
+
+    - name: Run SSL Certificate Generation + NGINX Installation and Running
+      block:
+        - name: Run 'cert_role' processes > Certificate generation
+          include_role:
+            name: cert_role
+        - name: Run 'nginx_role' processes > NGINX Installation and Running
+          include_role:
+            name: nginx_role
+      tags:
+        - nginxUp # Tag to warming up and running NGINX Web Services!
+
+    - name: Run MariaDB Installation + Create a Database/User for its Environment
+      block:
+        - name: Run 'db_role' processes
+          include_role:
+            name: db_role 
+      tags:
+        - dataUp # Tag to warming up and running MariaDB service! 
+
+...

@@ -1,0 +1,9 @@
+---
+# vars file for cert_role
+
+n_vars:
+  https_cert_path: /etc/ssl/crt/{{ ansible_host }}.crt
+  https_prkey_path: /etc/ssl/private/{{ ansible_host }}.pem
+  https_csr_path: /etc/ssl/csr/{{ ansible_host }}.csr
+
+...

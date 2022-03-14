@@ -1,0 +1,41 @@
+---
+# tasks file for cert_role
+
+### Create a directories for SSL certificate components. ####################
+### Permissions: CSR/CRT (0644), KEY (0600). ################################
+- name: Creates the directory /etc/ssl/crt
+  file:
+    path: /etc/ssl/crt
+    state: directory
+
+- name: Creates the directory /etc/ssl/private
+  file:
+    path: /etc/ssl/private
+    state: directory
+
+- name: Creates the directory /etc/ssl/csr
+  file:
+    path: /etc/ssl/csr
+    state: directory
+#############################################################################
+
+### SSL Certificate generation process. BEGIN...#############################
+- name: Generate a Private Key for the OpenSSL certificate
+  openssl_privatekey:
+    path: "{{ n_vars.https_prkey_path }}"
+    size: 2048
+
+- name: Generate a Certificate Signing Request (CSR)
+  openssl_csr:
+    path: "{{ n_vars.https_csr_path }}"
+    privatekey_path: "{{ n_vars.https_prkey_path }}"
+    
+- name: Generate a Self Signed OpenSSL certificate itself
+  openssl_certificate:
+    path: "{{ n_vars.https_cert_path }}"
+    privatekey_path: "{{ n_vars.https_prkey_path }}"
+    csr_path: "{{ n_vars.https_csr_path }}"
+    provider: selfsigned
+### SSL Certificate generation process. ...END.##############################
+
+...

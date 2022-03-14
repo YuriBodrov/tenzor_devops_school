@@ -1,0 +1,12 @@
+---
+# vars file for nginx_role
+
+n_vars_ports:
+  http_nginx_port: 80 # NGINX HTTP Port by default
+  https_nginx_port: 443 # NGINX HTTPS Port by default
+
+n_vars_paths:
+  https_cert_path: /etc/ssl/crt/{{ ansible_host }}.crt
+  https_prkey_path: /etc/ssl/private/{{ ansible_host }}.pem
+
+...

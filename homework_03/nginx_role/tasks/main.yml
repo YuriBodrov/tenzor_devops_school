@@ -1,0 +1,81 @@
+---
+# tasks file for nginx_role
+
+### NGINX Installation steps. BEGIN...#######################################
+- name: Create NGINX repository definition
+  copy:
+    src: files/nginx.repo
+    dest: /etc/yum.repos.d/nginx.repo
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Install NGINX Web Services
+  ansible.builtin.command: /usr/bin/yum install nginx -y
+
+- name: Copy main NGINX Configuration File
+  copy:
+    src: files/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_nginx_service
+
+- name: Copy Web Site's Configuration Content
+  template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/conf.d/with_ls.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_nginx_service
+
+- name: Copy index.html Markup Content
+  template:
+    src: templates/index.html.j2
+    dest: /usr/share/nginx/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_nginx_service
+
+- name: Verify that NGINX Service is Enabled and Started
+  service:
+    name: nginx
+    state: started
+    enabled: true
+
+#- name: Install the FIREWALLD module
+#  ansible.builtin.command: python -m pip install python-firewall
+
+- name: Set a Firewalld rules for NGINX Web Service
+  ansible.builtin.command: "firewall-cmd --permanent --add-port={{ item }}/tcp"
+  ignore_errors: false
+  notify: reload_firewalld_service # Apply these firewalld rules!
+  loop:
+    - "{{ n_vars_ports.http_nginx_port }}"
+    - "{{ n_vars_ports.https_nginx_port }}"
+    
+### NGINX Installation steps. ...END.########################################
+
+# Web Nodes availability testing ############################################
+   
+- name: Check that HTTP Web Node returns a status 200
+  uri:
+    url: "http://{{ ansible_host }}:{{ n_vars_ports.http_nginx_port }}"
+    return_content: yes
+  register: result
+  failed_when: result.status != 200
+
+- name: Makes a secure connection and get HTTPS port status 
+  wait_for:
+    host: "{{ ansible_host }}"
+    port: "{{ n_vars_ports.https_nginx_port }}"
+    state: started         # Port should be open
+    delay: 0               # No wait before first check (sec)
+    timeout: 3             # Stop checking after timeout (sec)
+  ignore_errors: yes
+#############################################################################
+
+...
