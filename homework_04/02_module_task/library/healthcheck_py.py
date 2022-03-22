@@ -3,6 +3,7 @@
 
 from ansible.module_utils.basic import AnsibleModule
 import sys
+import json
 from urllib.request import urlopen # For Python 3 env
 #from urllib import urlopen # For Python 2.7 env
 
@@ -32,6 +33,7 @@ def main():
     addr=dict(required=True, type='str')
     #tls=dict(type='bool', default="True")
   )
+  
   ### Creating an Object > Module: #######
   module = AnsibleModule(
     argument_spec=module_args,
@@ -42,7 +44,9 @@ def main():
   addr = module.params["addr"]
   #tls = module.params["tls"]
 
-  print (get_http_status(addr))
+  output = get_http_status(addr)
+  
+  print ("{\"msg\" : \"" + output + "\"}")
   
   sys.exit(0)
 
