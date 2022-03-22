@@ -1,0 +1,29 @@
+---
+
+- name: Test Drive with Python Module
+  hosts: centos_nodes
+  vars:
+    - mac_addr: "" # Custom MAC Address from Command Line
+    - mac_addr_by_dflt: "2056876429" # Default MAC Address from a task
+
+  # NOTE : ACTUALLY, MAC ADDRESS HAS A 6 BYTES. :-)
+  
+  tasks:
+  
+    - name: Debug module by using of Python algorithm
+      
+      block: ### Main Tasks Block proceeding...####################################
+      
+        - name: "Default Task > With a default MAC Address : '2056876429'"
+          ignore_errors: False
+          debug:
+            msg: "{{ mac_addr_by_dflt | filter_function }}"
+
+        - name: "Custom Task > With a custom MAC Address : '{{ mac_addr }}'"
+          ignore_errors: False
+          debug:
+            msg: "{{ mac_addr | filter_function }}"
+
+      #############################################################################
+
+... 

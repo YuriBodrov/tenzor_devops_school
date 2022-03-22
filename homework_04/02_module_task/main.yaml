@@ -1,0 +1,69 @@
+---
+
+- name: Custom Ansible Module > Get HTTP Status Code from Web Node
+  hosts: centos_nodes
+  gather_facts: false
+  vars:
+    - dflt_url: "https://tensor.ru"
+    - custom_url: ""
+
+  tasks:
+    
+    ### Shell Script. Get HTTP status code algorithm...#############################
+    - name: "SHELL SCRIPT : DEFAULT WEB NODE '{{ dflt_url }}' HTTP Status Code..."
+      healthcheck_sh:
+        addr: "{{ dflt_url }}"
+        #cmdString: "{{ dflt_url }}"
+        #urlAddr: "https://tensor.ru"
+      register: web_node_result
+      ignore_errors: true
+      when: custom_url == ""
+
+    - name: "Get result from Default Web Node '{{ dflt_url }}'"
+      debug:
+        msg: "Shell Script. Web Node HTTP Status : {{ web_node_result }}"
+      when: custom_url == ""
+
+    - name: "SHELL SCRIPT : CUSTOM WEB NODE '{{ custom_url }}' HTTP Status Code..."
+      healthcheck_sh:
+        addr: "{{ custom_url }}"
+        #cmdString: "{{ dflt_url }}"
+        #urlAddr: "https://tensor.ru"
+      register: web_node_result
+      ignore_errors: true
+      when: custom_url != ""
+
+    - name: "Get result from Custom Web Node '{{ custom_url }}'"
+      debug:
+        msg: "Shell Script. Web Node HTTP Status : {{ web_node_result }}"
+      when: custom_url != ""
+    ###...Shell Script. Get HTTP status code algorithm. END. #######################
+
+
+    ### Python. Get HTTP status code algorithm...###################################
+    - name: "PYTHON : DEFAULT WEB NODE '{{ dflt_url }}'. HTTP Status Code..."
+      healthcheck_py:
+        addr: "{{ dflt_url }}"
+      register: python_result
+      ignore_errors: true
+      when: custom_url == ""
+
+    - name: "PYTHON : Process result"
+      debug:
+        msg: "Python. Web Node '{{ dflt_url }}' HTTP Status > {{ python_result }}"
+      when: custom_url == ""
+
+    - name: "PYTHON : CUSTOM WEB NODE '{{ custom_url }}'. HTTP Status Code..."
+      healthcheck_py:
+        addr: "{{ custom_url }}"
+      register: python_result
+      ignore_errors: true
+      when: custom_url != ""
+
+    - name: "PYTHON : Process result"
+      debug:
+        msg: "Python. Web Node '{{ custom_url }}' HTTP Status > {{ python_result }}"
+      when: custom_url != ""
+    ###...Python. Get HTTP status code algorithm. END. #############################
+    
+...
