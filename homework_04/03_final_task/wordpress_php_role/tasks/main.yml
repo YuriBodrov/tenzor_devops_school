@@ -1,0 +1,107 @@
+---
+    
+- name: Copy NGINX Configuration from Template for WordPress
+  template:
+    src: templates/nginx-wordpress.conf.j2
+    dest: /etc/nginx/conf.d/wordpress_node.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_nginx_service
+
+- name: Put Repo Files to /etc/yum.repos.d/ Directory
+  copy:
+    src: "{{ item }}"
+    dest: /etc/yum.repos.d/
+    owner: root
+    group: root
+    mode: 644
+  with_fileglob:
+    - files/*.repo
+
+- name: Install Packages From 'php_packages_list' 
+  ansible.builtin.command: /usr/bin/yum install {{ item }} -y
+  loop: "{{ php_packages_list }}"
+  args:
+    warn: no
+
+- name: Remove default '/etc/php-fpm.d/www.conf' file
+  ansible.builtin.file:
+    path: /etc/php-fpm.d/www.conf
+    state: absent
+
+- name: Copy 'wordpress.conf' from 'files' directory to '/etc/php-fpm.d/wordpress.conf'
+  copy:
+    src: files/wordpress.conf
+    dest: /etc/php-fpm.d/wordpress.conf
+    owner: root
+    group: root
+  #notify: restart_php-fpm_service
+
+- name: >
+    Download WordPress from 'http://wordpress.org/wordpress-{{ wp_version }}.tar.gz'
+    to '/srv/' Directory + Checksum
+  get_url: 
+    url: http://wordpress.org/wordpress-{{ wp_version }}.tar.gz
+    dest: /srv/
+    checksum: "{{ wp_checksum }}"
+    
+- name: Unarchive WordPress to /srv Folder
+  unarchive:
+    src: /srv/wordpress-{{ wp_version }}.tar.gz
+    dest: /srv/
+    remote_src: true
+
+- name: Add Linux Group 'wordpress'
+  ansible.builtin.group:
+    name: wordpress
+    state: present
+
+- name: >
+    Add linux user 'wordpress' with group 'wordpress'
+    and /srv/wordpress as homedir
+  user:
+    name: "{{ wp_user }}"
+    password: "{{ wp_password }}"
+    group: wordpress
+    create_home: true
+    home: "/srv/wordpress"
+    comment: WordPress User
+  no_log: true
+    
+- name: Create MariaDB Database for WordPress services
+  mysql_db:
+    name: "{{ wp_db_name }}"
+    state: present
+
+- name: Create WordPress Database User
+  mysql_user:
+    name: "{{ wp_db_user }}"
+    password: "{{ wp_db_password }}"
+    priv: '*.*:ALL'
+    state: present
+  no_log: true
+
+- name: >
+    Copy WordPress config file from 'templates'
+    to '/srv/wordpress/wp-config.php'
+  template:
+    src: templates/wp-config.php
+    dest: /srv/wordpress/wp-config.php
+    
+- name: >
+    '/srv/wordpress' directory recursive rights
+    for 'wordpress' user and group
+  file:
+    path: /srv/wordpress
+    owner: "{{ wp_user }}"
+    group: wordpress
+    recurse: yes
+  notify: restart_php-fpm_service
+    
+- name: Ensure that 'php-fpm' service is started 
+  service:
+    name: php-fpm
+    state: started
+  
+...

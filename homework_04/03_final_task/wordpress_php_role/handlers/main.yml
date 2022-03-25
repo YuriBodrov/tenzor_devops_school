@@ -1,0 +1,19 @@
+---
+# handlers file for wordpress_php_role
+
+- name: restart_nginx_service
+  service:
+    name: nginx
+    state: restarted
+
+- name: reload_firewalld_service
+  service:
+    name: firewalld
+    state: reloaded
+
+- name: restart_php-fpm_service
+  service:
+    name: php-fpm
+    state: restarted
+
+...

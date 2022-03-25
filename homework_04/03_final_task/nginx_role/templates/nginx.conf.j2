@@ -1,0 +1,15 @@
+server {
+    listen {{ n_vars_ports.http_nginx_port }};
+    listen {{ n_vars_ports.https_nginx_port }} ssl;
+    server_name         {{ ansible_host }};
+    ssl_certificate     {{ n_vars_paths.https_cert_path }};
+    ssl_certificate_key {{ n_vars_paths.https_prkey_path }};
+    root /usr/share/nginx/html;
+    index index.html index.htm;
+    
+    server_name {{ ansible_host }};
+    
+    location / {
+            try_files $uri $uri/ =404;
+    }
+}
